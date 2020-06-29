@@ -1,3 +1,1 @@
-How to run this
-Just deploy whole folder on any server 
-index.html is entry point
+Hit 'yarn dev' for a local server

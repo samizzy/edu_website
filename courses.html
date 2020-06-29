@@ -91,26 +91,47 @@
   $(function(){
   $("#header").load("header.html");
   $("#footer").load("footer.html");
-   var elementData='<div class="col-lg-4 col-md-6 d-flex align-items-stretch" style="padding-bottom: 2%;"><div class="course-item">';
+   let elementData='<div class="col-lg-4 col-md-6 d-flex align-items-stretch" style="padding-bottom: 2%;"><div class="course-item">';
      var endElement= '</div></div></div> ';
   var totalSession=0;
+  var titles = []
+  let sessionDiv = $('#sessionId')
   $.ajax({
              type: "GET",
              dataType: "json",
              url: "http://gharbaithepadho.com/service/videoList.php",
              success: function(data){
+             
              $.each(data.items, function(index, item) {
               if(item.snippet.resourceId.kind == 'youtube#video'){
               var iframeContent='<iframe width="380" height="315" src="https://www.youtube.com/embed/'+item.snippet.resourceId.videoId+'"></iframe>'
               var videoTitle='<center><b>'+item.snippet.title+'</b></center>';
-              console.log(iframeContent)
-              $('#sessionId').append(elementData+iframeContent+videoTitle+endElement)
-
+              let elementData=`<div data-text="${item.snippet.title}"class="col-lg-4 col-md-6 d-flex align-items-stretch" style="padding-bottom: 2%;"><div class="course-item">`;
+              sessionDiv.append(elementData+iframeContent+videoTitle+endElement)
+              titles.push(item.snippet.title)
               }
 
               });
+              if(window.location.search){
+                let params = (new URL(document.location)).searchParams;
+                let text = params.get("search")
+                console.log('input: '+text)
+                let c = $('[data-text]')
+                $(c).each(function (index, value){ 
+                  let elem = $(value)
+                  if(elem.attr('data-text').toLowerCase().indexOf(text)==-1){
+                    console.log(elem.attr('data-text'))
+                    console.log('matched')
+                    elem.detach()
+                  }
+                  
+                })              
+              }
              }
+
          });
+
+
 });
 </script>
 </body>

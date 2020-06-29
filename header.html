@@ -1,25 +1,112 @@
 <!-- ======= Header ======= -->
 <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center">
+    <div class="container align-items-center">
 
-        <h1 class="logo mr-auto"><a href="index.html"><img src="assets/img/favicon.png"/></a></h1>
+        <!-- <h1 class="logo mr-auto"><a href="index.html"><img src="assets/img/logo.png"/></a></h1> -->
 
-        <nav class="nav-menu d-none d-lg-block">
+        <!-- <nav class="nav-menu d-none d-lg-block">
             <ul>
                 <li class="active"><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="courses.html">Sessions</a></li>
-                <li><a href="trainers.html">Teachers</a></li>
-                <li class="drop-down">Register
-                    <ul><li><a href="student.html">Student</a></li>
-                        <li><a href="teacher.html">Teacher</a></li>
-                    </ul></li>
+                <li class="drop-down">Register</a>
+                    <ul>
+                                <li><a href="student.html">Student</a></li>
+                                <li><a href="teacher.html">Teacher</a></li>
+
+                            </ul>
+                        </li>
+                        <li><a href="#">Drop Down 2</a></li>
+                    </ul>
+                </li>
                 <li><a href="contact.html">Contact</a></li>
 
             </ul>
-        </nav><!-- .nav-menu -->
-
-        <a href="courses.html" class="get-started-btn">Get Started</a>
-
+        </nav>
+ -->
+ <!-- .nav-menu -->
+ <nav class="navbar navbar-expand-lg navbar-light">
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+         aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+     </button>
+     <a class="logo mr-auto" href="index.html"><img src="assets/img/logo.png"></a>
+     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+         <div class="navbar-nav mr-auto">
+             <a class="nav-item nav-link active" href="index.html">Home <span class="sr-only">(current)</span></a>
+             <a class="nav-item nav-link" href="about.html">About</a>
+             <a class="nav-item nav-link" href="courses.html">Sessions</a>
+             <div class="nav-item dropdown drop-down">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Register
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="student.html">Student</a>
+                    <a class="dropdown-item" href="teacher.html">Teacher</a>    
+                </div>
+             </div>
+             <a class="nav-item nav-link" href="contact.html">Contact</a>         
+        </div>
+        <form class="form-inline" action="/courses.html" method="GET" >
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" list='video-data' id="searchInput"  name="search" autocomplete="off" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
+         </form>
+    </div>
+ </nav>
+    <datalist id="video-data">
+    </datalist>
     </div>
 </header><!-- End Header -->
+<script>
+
+    $(document).ready(function(){   
+        higlightNavItem()
+        populateLocalStorageVideos()
+        let titles = JSON.parse(localStorage.getItem('videoTitles'))
+        $('#searchInput').keyup(function(e){ 
+            let text = $(this)[0].value.toLowerCase().trim()
+            if(!text)
+                return
+            let newHtml = titles.filter(t=> t.indexOf(text)>-1).map(t=>'<option value="'+t+'"/>').join('')
+            $('#video-data').html(newHtml) 
+        })
+    });
+
+    function higlightNavItem(){
+        let items = $('.nav-item')
+        let relativeUrl = getEndingUrl(window.location.href)
+        items.each(function( index , elem) {
+            if(elem.href && getEndingUrl(elem.href) == relativeUrl) $(elem).addClass('active')
+            else $(elem).removeClass('active')
+        });
+
+    }
+
+    function populateLocalStorageVideos(){
+        var endElement= '</div></div></div> ';
+        var totalSession=0;
+        var titles = []
+    $.ajax({
+             type: "GET",
+             dataType: "json",
+             url: "http://gharbaithepadho.com/service/videoList.php",
+             success: function(data){
+             
+             $.each(data.items, function(index, item) {
+              if(item.snippet.resourceId.kind == 'youtube#video'){
+              var iframeContent='<iframe width="380" height="315" src="https://www.youtube.com/embed/'+item.snippet.resourceId.videoId+'"></iframe>'
+              var videoTitle='<center><b>'+item.snippet.title+'</b></center>';
+              titles.push(item.snippet.title)
+              }
+
+              });
+            }
+         });
+         
+        }
+
+    
+    function getEndingUrl(url) {
+        return url.split('/').filter(it=> it.search(".html")>-1).map(it=>it.replace(/\?.*/,''))[0].trim()
+    }
+</script>
