@@ -47,6 +47,7 @@
              </div>
              <a class="nav-item nav-link" href="contact.html">Contact</a>         
         </div>
+<<<<<<< HEAD
         <form class="form-inline" action="/courses.html" method="GET" >
             <input class="form-control mr-sm-2" type="search" placeholder="Search" list='video-data' id="searchInput"  name="search" autocomplete="off" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
@@ -55,6 +56,15 @@
  </nav>
     <datalist id="video-data">
     </datalist>
+=======
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+         </form>
+    </div>
+ </nav>
+
+>>>>>>> e80fcde048b0fc81b7596a500df9d0a5c70c7477
     </div>
 </header><!-- End Header -->
 <script>
@@ -94,12 +104,12 @@
              
              $.each(data.items, function(index, item) {
               if(item.snippet.resourceId.kind == 'youtube#video'){
-              var iframeContent='<iframe width="380" height="315" src="https://www.youtube.com/embed/'+item.snippet.resourceId.videoId+'"></iframe>'
-              var videoTitle='<center><b>'+item.snippet.title+'</b></center>';
               titles.push(item.snippet.title)
               }
 
               });
+
+              localStorage.setItem('videoTitles', JSON.stringify(titles))
             }
          });
          
